@@ -112,6 +112,7 @@ class SAS
 public:
   typedef uint64_t TrailId;
   typedef uint64_t Timestamp;
+  static bool compression_enabled;
 
 #if HAVE_ZLIB_H
   // Compression-related classes are only available if zlib is
@@ -205,6 +206,9 @@ public:
     // Compression-related methods are only available if zlib is
     inline Message& add_compressed_param(const std::string& s, const Profile* profile = NULL)
     {
+      if (!compression_enabled)
+        return add_var_param(s);
+
       Compressor* compressor = Compressor::get();
       return add_var_param(compressor->compress(s, profile));
     }

@@ -60,6 +60,7 @@ std::atomic<SAS::TrailId> SAS::_next_trail_id(1);
 SAS::Connection* SAS::_connection = NULL;
 SAS::sas_log_callback_t* SAS::_log_callback = NULL;
 SAS::create_socket_callback_t* SAS::_socket_callback = NULL;
+bool SAS::compression_enabled = false;
 
 class SAS::Connection
 {
