@@ -97,6 +97,8 @@ private:
   int _buffer_len;
   char* _buffer;
 
+  static const int MAX_BUFFER_SIZE = 131072;
+
   std::unordered_map<const SAS::Profile*, saved_lz4_stream> _saved_streams;
 };
 
@@ -316,6 +318,13 @@ std::string LZ4Compressor::compress(const std::string& s, const SAS::Profile* pr
       // guaranteed to succeed if the buffer is large enough). We permanently
       // enlarge this buffer so we aren't redoing this on every compression.
       _buffer_len *= 2;
+
+      if ((_buffer_len * 2) > MAX_BUFFER_SIZE)
+      {
+        SAS_LOG_WARNING("Attempting to compress %ul bytes of data - won't fit into MAX_BUFFER_SIZE", s.length());
+        break;
+      }
+
       _buffer = (char*)realloc((void*)_buffer, _buffer_len);
     }
     else
